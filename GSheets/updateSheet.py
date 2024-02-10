@@ -13,10 +13,14 @@ from utils.stringUtils import stringArrayToStr
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 SAMPLE_SPREADSHEET_ID = "1deXQhe0oIKTty-jbkSqYcQjqBhPG7Bhrsyq-TBX3SVo"
-SAMPLE_RANGE_NAME = "A2:I"
 
 
-def writeNewData(partners:List[Partner]):
+
+def writeNewData(partners:List[Partner],sheet:str):
+  SAMPLE_RANGE_NAME = "A2:I"
+  if(len(sheet.strip())>0):SAMPLE_RANGE_NAME=(sheet.strip()+"!")+SAMPLE_RANGE_NAME
+
+
   creds = None
 
   if os.path.exists("token.json"):
@@ -49,7 +53,7 @@ def writeNewData(partners:List[Partner]):
       # for specInd,spec in enumerate(partner.specializations):
       #   specString+=spec
       #   if((specInd+1)<len(partner.specializations)):specString+=","
-      sheet.values().append(valueInputOption="RAW",spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,body={"majorDimension":"ROWS","range":SAMPLE_RANGE_NAME,"values":[[partner.name,partner.source,partner.contactDetails.web,stringArrayToStr(partner.specializations),partner.source,stringArrayToStr(partner.locations),partner.contactDetails.email,partner.contactDetails.phone,partner.contactDetails.address]]}).execute()
+      sheet.values().append(valueInputOption="RAW",spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,body={"majorDimension":"ROWS","range":SAMPLE_RANGE_NAME,"values":[[partner.name,partner.source,partner.contactDetails.web,stringArrayToStr(partner.specializations),stringArrayToStr(partner.locations),partner.contactDetails.email,partner.contactDetails.phone,partner.contactDetails.address]]}).execute()
 
   except HttpError as err:
     print(err)
