@@ -96,4 +96,4 @@ def getPartnerList()->list[Partner]:
     driver.quit()
     return finalPartnerObjList
 
-getPartnerList()
+# getPartnerList()

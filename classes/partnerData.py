@@ -2,17 +2,19 @@ import json
 
 
 class PartnerContact:
+    def __init__(self) -> None:
+        self.phone=self.email=self.address=self.web="N/A"
     phone:str
     email:str
     address:str
     web:str
 
-    def __str__(self) -> str:
-        return str(self.__dict__)
     
 class Partner:
     def __init__(self) -> None:
         self.contactDetails=PartnerContact()
+        self.name=self.source=self.partnerPage="N/A"
+        self.specializations=self.locations=["N/A"]
     name:str
     specializations:list[str]
     locations:list[str]
@@ -20,6 +22,4 @@ class Partner:
     partnerPage:str
     contactDetails:PartnerContact
 
-    def __str__(self) -> str:
-        return str(self.__dict__)
 
