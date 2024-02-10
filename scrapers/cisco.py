@@ -59,6 +59,7 @@ def getPartnerList():
                             web=webList[0].text
                             partner.contactDetails.web=web
                 # Add each partner to sheet
+                print("Page ",currentPage+1," partner ",currentIndex+1)
                 writeNewData(partners=[partner])
                 driver.back()
                 currentIndex+=1
