@@ -63,6 +63,8 @@ def getPartnerList():
                 currentIndex+=1
             except:
                 print("Error at page ",currentPage+1," partner ",currentIndex+1)
+                driver.back()
+                currentIndex+=1
                 continue
         try:
             btnList=wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR,"nav>ul>li>a.group>span")))
