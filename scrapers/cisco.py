@@ -17,13 +17,14 @@ ciscoPartnersLink="https://locatr.cloudapps.cisco.com/WWChannels/LOCATR/pf/index
 def getPartnerList():
     driver=webdriver.Chrome(options=chrome_options)
     driver.get(ciscoPartnersLink)
-    wait=WebDriverWait(driver=driver,timeout=10)
+    wait=WebDriverWait(driver=driver,timeout=20)
     finalPartnerList:List[Partner]=[]
 
     currentIndex=0
     currentPage=0
     while True:
         while True:
+            wait.until_not(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.z-50")))  
             cardList=wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR,"div.__MR_HOME_SEARCH_MAIN_RESULTS__>ul>li")))
             if(len(cardList)<=currentIndex):break
             try:
