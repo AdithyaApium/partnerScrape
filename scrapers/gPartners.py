@@ -28,8 +28,11 @@ def getPartnerList()->list[Partner]:
             break
         currentCardCount=cardCount
         print("Found cards",cardCount," - ",currentCardCount)
-        moreButton=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.load-more-container>button")))
-        moreButton.click()
+        try:
+            moreButton=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.load-more-container>button")))
+            moreButton.click()
+        except:
+            break
 
     finalCardList=driver.find_elements(By.CSS_SELECTOR,"a[data-test-id='partner-link']")
     for i,card in enumerate(finalCardList):
