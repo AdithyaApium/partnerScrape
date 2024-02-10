@@ -54,7 +54,7 @@ def getPartnerList()->list[Partner]:
                 locations=locationsElement[0].find_element(By.XPATH, "following-sibling::*[1]").text
         # Create a partner obj and set values
         p = Partner()
-        p.source=gPartnerLink
+        p.source="Google"
         p.name=partnerName
         p.specializations=specList.split(",")
         p.locations=locations.split(",")
