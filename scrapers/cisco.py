@@ -45,6 +45,7 @@ def getPartnerList():
                     if(len(addrSectionList)>0):
                         address=stringArrayToStr([a.text for a in addrSectionList])
                         partner.contactDetails.address=address
+                        partner.locations=[addrSectionList[-1].text]
 
                     phoneSection=contactDetailSection[0].find_element(By.XPATH,"..").find_elements(By.CSS_SELECTOR,"div>p>a")
                     if(len(phoneSection)>0):
