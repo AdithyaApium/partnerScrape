@@ -32,12 +32,16 @@ def getPartnerList():
                 partner=Partner()
                 partner.source="Cisco"
                 card.click()
+            except:
+                print("Error clicking card ",currentIndex+1," at page ",currentPage+1)
 
+            try:
                 headers=wait.until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR,"section>h4")))
-                specHeader=[h for h in headers if h.text.find("Specializations")>-1]
-                if(len(specHeader)>0):
-                    specList=specHeader[0].find_element(By.XPATH,"..").find_elements(By.CSS_SELECTOR,"ul>li")
-                    partner.specializations=[spec.text for spec in specList]
+                if(len(headers)>0):
+                    specHeader=[h for h in headers if h.text.find("Specializations")>-1]
+                    if(len(specHeader)>0):
+                        specList=specHeader[0].find_element(By.XPATH,"..").find_elements(By.CSS_SELECTOR,"ul>li")
+                        partner.specializations=[spec.text for spec in specList]
 
                 contactDetailSection=wait.until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR,"body>div>div>div>div>div>section>h3")))
                 if(len(contactDetailSection)>0):
