@@ -27,10 +27,10 @@ def getPartnerList():
             wait.until_not(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.z-50")))  
             cardList=wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR,"div.__MR_HOME_SEARCH_MAIN_RESULTS__>ul>li")))
             if(len(cardList)<=currentIndex):break
+            partner=Partner()
+            partner.source="Cisco"
             try:
                 card=cardList[currentIndex]
-                partner=Partner()
-                partner.source="Cisco"
                 card.click()
             except:
                 print("Error clicking card ",currentIndex+1," at page ",currentPage+1)
@@ -42,7 +42,9 @@ def getPartnerList():
                     if(len(specHeader)>0):
                         specList=specHeader[0].find_element(By.XPATH,"..").find_elements(By.CSS_SELECTOR,"ul>li")
                         partner.specializations=[spec.text for spec in specList]
-
+            except:
+                partner.specializations=["N/A"]
+            try:
                 contactDetailSection=wait.until(EC.visibility_of_any_elements_located((By.CSS_SELECTOR,"body>div>div>div>div>div>section>h3")))
                 if(len(contactDetailSection)>0):
                     partner.name=contactDetailSection[0].text
