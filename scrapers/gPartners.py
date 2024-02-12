@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from GSheets.updateSheet import writeNewData
 
 from classes.partnerData import Partner
+from classes.partnerData import Partner
 
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
@@ -22,12 +23,11 @@ def getPartnerList():
     driver.get(gPartnerLink)
     wait=WebDriverWait(driver=driver,timeout=10)
     currentCardCount=0
-    
+
     while True:
         wait.until(lambda driver:(len(driver.find_elements(By.CSS_SELECTOR,"a[data-test-id='partner-link']")))>currentCardCount)
         cardCount=len(driver.find_elements(By.CSS_SELECTOR,"a[data-test-id='partner-link']"))
         print("Card count updated from ",currentCardCount," to ",cardCount)
-        # Temporarily limited to 12 elements
         if((not cardCount>currentCardCount)):
             break
         currentCardCount=cardCount
@@ -35,9 +35,9 @@ def getPartnerList():
 
         
         for ind in range(lastVisitedIndex+1,cardCount):
-            if(ind<=2193):
-                lastVisitedIndex=ind
-                continue
+            # if(ind<=2193):
+            #     lastVisitedIndex=ind
+            #     continue
             loadedCards=wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR,"a[data-test-id='partner-link']")))
             print("Starting from partner ",ind+1)
             try:
@@ -46,8 +46,19 @@ def getPartnerList():
                 loadedCards[ind].click()
             except:
                 print("Error clicking card ",ind+1)
+
+            # Wait for everythinf to be loaded
+            # try:
+            skeletons=wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,"cs-skeleton")))
+            while len(skeletons)>0:
+                # wait.until(EC.staleness_of(skeletons[0]))
+                skeletons=driver.find_elements(By.CSS_SELECTOR,"cs-skeleton")
+            # except:
+            #     print("Error waiting for skeletons")
+
             try:
-                wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"app-contact-icons>h2")))
+                
+                # wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"app-contact-icons>h2")))
             
                 contactDetails=driver.find_elements(By.CSS_SELECTOR,"h2[title='Contact Details']")
                 if(len(contactDetails)>0):
@@ -66,19 +77,22 @@ def getPartnerList():
 
 
             try:
-                nameElement=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"h1[data-test-id='title']")))
+                # nameElement=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"h1[data-test-id='title']")))
+                nameElement=driver.find_element(By.CSS_SELECTOR,"h1[data-test-id='title']")
                 partner.name=nameElement.text
             except:
                 print("No name in partner ",ind+1)
 
             try:
-                specContainer=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"p[data-test-id='specializations-data']")))
+                # specContainer=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"p[data-test-id='specializations-data']")))
+                specContainer=driver.find_element(By.CSS_SELECTOR,"p[data-test-id='specializations-data']")
                 partner.specializations=specContainer.text.split(",")
             except:
                 print("No specs in partner ",ind+1)
 
             try:
-                locationListContainer=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.detail-locations")))
+                locationListContainer=driver.find_element(By.CSS_SELECTOR,"div.detail-locations")
+                # locationListContainer=wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"div.detail-locations")))
                 countryElements=locationListContainer.find_elements(By.CSS_SELECTOR,"app-location-card>mat-card>h3[data-test-id='location-card-country']")
                 if(len(countryElements)>0):
                     partner.locations=[c.text for c in countryElements]
@@ -92,7 +106,8 @@ def getPartnerList():
             except:
                 print("No location section in partner ",ind+1)
 
-            writeNewData(partners=[partner],sheet="Google")
+            # writeNewData(partners=[partner],sheet="Google")
+            print(partner.name,"\n")
             driver.back()
         lastVisitedIndex=ind
         print("Clicking button after ",ind+1," partners")
