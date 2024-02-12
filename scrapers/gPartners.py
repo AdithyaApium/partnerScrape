@@ -6,8 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from GSheets.updateSheet import writeNewData
 
-from classes.partnerData import Partner, PartnerContact
-from utils.stringUtils import stringArrayToStr
+from classes.partnerData import Partner
 
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
@@ -21,10 +20,8 @@ def getPartnerList():
     global lastVisitedIndex
     driver=webdriver.Chrome(options=chrome_options)
     driver.get(gPartnerLink)
-    wait=WebDriverWait(driver=driver,timeout=5)
+    wait=WebDriverWait(driver=driver,timeout=10)
     currentCardCount=0
-
-    finalPartnerObjList:list[Partner]=[]
     
     while True:
         wait.until(lambda driver:(len(driver.find_elements(By.CSS_SELECTOR,"a[data-test-id='partner-link']")))>currentCardCount)
@@ -38,6 +35,9 @@ def getPartnerList():
 
         
         for ind in range(lastVisitedIndex+1,cardCount):
+            if(ind<=2193):
+                lastVisitedIndex=ind
+                continue
             loadedCards=wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR,"a[data-test-id='partner-link']")))
             print("Starting from partner ",ind+1)
             try:
